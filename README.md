@@ -1,2 +1,2 @@
 # universal_medical_identity
-Universal Medical of a patient
+Universal Medical Identity of a patient
