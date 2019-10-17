@@ -3,9 +3,9 @@ import secrets
 from PIL import Image
 from flask import render_template, url_for, flash, redirect, request, abort
 from medicalData import app, db, bcrypt, mail
-from medicalData.forms import (RegistrationForm, LoginForm, UpdateAccountForm,
-                             PostForm, RequestResetForm, ResetPasswordForm)
-from medicalData.models import User, Post
+from medicalData.forms import (RegistrationForm, LoginForm, PatientForm, DoctorForm, InsuranceCompanyForm, UpdateAccountForm,
+                                 RequestResetForm, ResetPasswordForm,)
+from medicalData.models import User, Patient, Doctor, InsuranceCompany, GovernmentBody,Report, Appointment, Disease
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 
@@ -198,3 +198,14 @@ def reset_token(token):
         flash('Your password has been updated! You are now able to log in', 'success')
         return redirect(url_for('login'))
     return render_template('reset_token.html', title='Reset Password', form=form)
+
+
+
+
+
+
+
+    # public static String generatePIN() {
+    #     int randomPIN = (int) (Math.random() * 900000) + 100000;
+    #     return "" + randomPIN;
+    # }
