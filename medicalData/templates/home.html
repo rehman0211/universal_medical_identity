@@ -1,21 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Medical Universal Identity</title>
-  <meta name="description" content="Free Bootstrap Theme by BootstrapMade.com">
-  <meta name="keywords" content="free website templates, free bootstrap themes, free template, free bootstrap, free website template">
-
-  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans|Raleway|Candal">
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/font-awesome.min.css') }}">
-
-  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-
-<body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
+{%extends "layout.html" %}
+{% block content %}
   <!--banner-->
   <section id="banner" class="banner">
     <div class="bg-color">
@@ -65,14 +49,16 @@
 
                   <!-- Modal body -->
                   <div class="modal-body">
+                    <div class="jumbotron">
+                     <form method="POST" action="">
                     <div class="container">
                        <label for="uname"><b>Username</b></label>
-                       <input type="text" placeholder="Enter Username" name="uname" required>
+                       <input type="text" class="form-control" placeholder="Enter Username" name="uname" required>
                        <br>
                        <label for="psw"><b>Password</b></label>
-                       <input type="password" placeholder="Enter Password" name="psw" required>
+                       <input type="password" class="form-control" placeholder="Enter Password" name="psw" required>
                         <br>
-                       <button type="submit">Login</button>
+                       <button type="submit" class="btn btn-appoint large">Login</button>
                        <br>
                       <label>
                       <input type="checkbox" checked="checked" name="remember"> Remember me
@@ -81,6 +67,8 @@
                     <div class="container" style="background-color:#f1f1f1">
                            <span class="psw">Forgot <a href="#">password?</a></span>
                     </div>
+                    </form>
+                  </div>
                   </div>
                 </div>
                 </div>
@@ -99,21 +87,25 @@
 
                   <!-- Modal body -->
                   <div class="modal-body">
+                    <div class="jumbotron">
+                    <form method="POST" action="">  
                     <div class="container">
-                       <label for="uname"><b>Username</b></label>
-                       <input type="text" placeholder="Enter Username" name="uname" required>
+                       <label for="username"><b>Username</b></label>
+                       <input type="text" class="form-control" placeholder="Enter Username" name="username" required>
                        <br>
-                       <label for="uemail"><b>Email</b></label>
-                       <input type="email" placeholder="Enter Email" name="uemail" required>
+                       <label for="useremail"><b>Email</b></label>
+                       <input type="email" class="form-control" placeholder="Enter Email" name="useremail" required>
                        <br>
-                       <label for="psw"><b>Password</b></label>
-                       <input type="password" placeholder="Enter Password" name="psw" required>
+                       <label for="password"><b>Password</b></label>
+                       <input type="password" class="form-control" placeholder="Enter Password" name="password" required>
                         <br>
-                        <label for="confpsw"><b>Confirm Password</b></label>
-                        <input type="confpassword" placeholder="Renter Password" name="confpsw" required>
+                        <label for="confpassword"><b>Confirm Password</b></label>
+                        <input type="confpassword" class="form-control" placeholder="Renter Password" name="confassword" required>
                          <br>
-                       <button type="submit">Register</button>
+                       <button type="submit" class="btn btn-appoint large">Register</button>
                        <br>
+                    </div>
+                    </form>
                     </div>
                   </div>
                 </div>
@@ -503,13 +495,4 @@
     </div>
   </footer>
   <!--/ footer-->
-
-  <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/jquery.easing.min.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}" "js/bootstrap.min.js"></script>
-  <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
-  <script src="{{ url_for('static', filename='contactform/contactform.js') }}"></script>
-
-</body>
-
-</html>
+{% endblock content %}
