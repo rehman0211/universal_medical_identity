@@ -2,6 +2,7 @@ import os
 import secrets
 from PIL import Image
 from flask import render_template, url_for, flash, redirect, request, abort
+from datetime import datetime
 from medicalData import app, db, bcrypt, mail
 from medicalData.forms import (RegistrationForm, LoginForm, PatientForm, DoctorForm, InsuranceCompanyForm, UpdateAccountForm,
                                  RequestResetForm, ResetPasswordForm,)
@@ -15,6 +16,39 @@ from flask_mail import Message
 def home():
     return render_template('home.html')
 
+
+@app.route("/patient_info_update", methods=['GET', 'POST'])
+def patient_info_update():
+    if request.method == 'POST':
+      f =request.files['pic']
+      patient_info= Patient(user_id=1,fullName=request.form['fullname'],qr_code='nnjhbhj',phoneNo=request.form['phoneNumber'],city=request.form['districtName'],state=request.form['stateName'],image_file=f.read(),current_doctorId=2)
+      db.session.add(patient_info)
+      db.session.commit()  
+      return redirect('dashboard')
+    return render_template('patient_next.html')
+
+@app.route("/dashboard")
+def dashboard():
+    return render_template('dashboard.html')
+       
+
+@app.route('/handle_data', methods=['POST'])
+def handle_data():
+    return render_template('forgot_password.html')    
+
+
+@app.route('/forgotpassword_form', methods=['GET', 'POST'])
+def forgotpassword_form():
+    if request.method == 'POST':
+        # do stuff when the form is submitted
+
+        # redirect to end the POST handling
+        # the redirect can be to the same route or somewhere else
+        return redirect(url_for('index'))
+
+    # show the form, it wasn't submitted
+    return render_template('forgot_password.html')    
+
 @app.route("/about")
 def about():
     return render_template('about.html', title='About')
@@ -22,33 +56,61 @@ def about():
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
-    if current_user.is_authenticated:
-        return redirect(url_for('home'))
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = User(username=form.username.data, email=form.email.data, password=hashed_password)
-        db.session.add(user)
-        db.session.commit()
-        flash('Your account has been created! You are now able to log in', 'success')
-        return redirect(url_for('login'))
-    return render_template('register.html', title='Register', form=form)
+    hashed_password = bcrypt.generate_password_hash(request.form['password']).decode('utf-8')
+    uname=request.form['username']
+    Email=request.form['useremail']
+    uType=request.form['userType']
+    user = User(username=uname, email=Email, password=hashed_password,userType=uType)
+    db.session.add(user)
+    db.session.commit()
+    flash('Your account has been created! You are now able to log in', 'success')
+    return redirect(url_for('patient_info_update'))
+   #  if current_user.is_authenticated:
+   #      return redirect(url_for('home'))
+   #  form = RegistrationForm()
+   #  if form.validate_on_submit():
+   #      hashed_password = bcrypt.generate_password_hash(request.form['password']).decode('utf-8')
+   #      user = User(username=request.form['username'], email=request.form['useremail'], password=hashed_password,userType=request.form['userType'],lastLogin=datatime.utcnow)
+   #      db.session.add(user)
+   #      db.session.commit()
+   #      flash('Your account has been created! You are now able to log in', 'success')
+   #      return redirect(url_for('home'))
+   # # return render_template('patient_next.html', title='Register', form=form)
+   #  return render_template('forgot_password.html')
 
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
-        if user and bcrypt.check_password_hash(user.password, form.password.data):
-            login_user(user, remember=form.remember.data)
-            next_page = request.args.get('next')
-            return redirect(next_page) if next_page else redirect(url_for('home'))
-        else:
-            flash('Login Unsuccessful. Please check email and password', 'danger')
-    return render_template('login.html', title='Login', form=form)
+        return redirect(url_for('dashboard'))
+    Email = request.form['uname']
+    #hashed_password = bcrypt.generate_password_hash(request.form['password']).decode('utf-8')
+    user = User.query.filter_by(email=Email).first()
+    if user and bcrypt.check_password_hash(user.password, request.form['password']):
+        return redirect(url_for('login'))
+        login_user(user)
+        return redirect(url_for('dashboard'))
+    else:
+        flash('Login Unsuccessful. Please check email and password', 'danger')
+    return redirect(url_for('login'))
+
+
+
+# @app.route("/login", methods=['GET', 'POST'])
+# def login():
+#     if current_user.is_authenticated:
+#         return redirect(url_for('home'))
+#     form = LoginForm()
+#     if form.validate_on_submit():
+#         user = User.query.filter_by(email=form.email.data).first()
+#         if user and bcrypt.check_password_hash(user.password, form.password.data):
+#             login_user(user, remember=form.remember.data)
+#             next_page = request.args.get('next')
+#             return redirect(next_page) if next_page else redirect(url_for('home'))
+#         else:
+#             flash('Login Unsuccessful. Please check email and password', 'danger')
+#     return render_template('login.html', title='Login', form=form)
+  
 
 
 @app.route("/logout")
@@ -198,7 +260,13 @@ def reset_token(token):
 
 
 
-
+@app.route("/getAppointmentsByUser/<tag>", methods=['GET','POST'])
+def getAppointmentsByUser(tag):
+    if tag:
+        appointments = Appointment.query.filter_by(disease.tag = tag).all()
+        return render_template('patient_history.html',  appointments = 'appointments')
+    else:
+        return '<h3>There is nothing to show</h3>'
 
 
 

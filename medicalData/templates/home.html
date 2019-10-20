@@ -65,7 +65,7 @@
                       </label>
                     </div>
                     <div class="container" style="background-color:#f1f1f1">
-                           <span class="psw">Forgot <a href="#">password?</a></span>
+                           <span class="psw">Forgot <a href="{{ url_for('forgotpassword_form') }}">Password?</a></span> 
                     </div>
                     </form>
                   </div>
@@ -88,7 +88,7 @@
                   <!-- Modal body -->
                   <div class="modal-body">
                     <div class="jumbotron">
-                    <form method="POST" action="">  
+                    <form method="POST" action="{{ url_for('register') }}">  
                     <div class="container">
                        <label for="username"><b>Username</b></label>
                        <input type="text" class="form-control" placeholder="Enter Username" name="username" required>
@@ -96,6 +96,14 @@
                        <label for="useremail"><b>Email</b></label>
                        <input type="email" class="form-control" placeholder="Enter Email" name="useremail" required>
                        <br>
+                       <label for="userType"><b>District</b></label>
+                                                                 <select class="form-control" name="userType">
+                                                                        <option value="Patient">Patient</option>
+                                                                        <option value="Doctor">Doctor</option>
+                                                                        <option value="InsuranceCompany">Insuarance Company</option>
+                                                                        <option value="GovernmentalOrganization">Governmental_OrganizationS/NGO</option>
+                                                                      </select>
+                                                                 <br>
                        <label for="password"><b>Password</b></label>
                        <input type="password" class="form-control" placeholder="Enter Password" name="password" required>
                         <br>
@@ -439,60 +447,5 @@
     </div>
   </section>
   <!--/ contact-->
-  <!--footer-->
-  <footer id="footer">
-    <div class="top-footer">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-4 col-sm-4 marb20">
-            <div class="ftr-tle">
-              <h4 class="white no-padding">About Us</h4>
-            </div>
-            <div class="info-sec">
-              <p>Praesent convallis tortor et enim laoreet, vel consectetur purus latoque penatibus et dis parturient.</p>
-            </div>
-          </div>
-          <div class="col-md-4 col-sm-4 marb20">
-            <div class="ftr-tle">
-              <h4 class="white no-padding">Quick Links</h4>
-            </div>
-            <div class="info-sec">
-              <ul class="quick-info">
-                <li><a href="home.html"><i class="fa fa-circle"></i>Home</a></li>
-                <li><a href="#service"><i class="fa fa-circle"></i>Service</a></li>
-                <li><a href="#contact"><i class="fa fa-circle"></i>Appointment</a></li>
-              </ul>
-            </div>
-          </div>
-          <div class="col-md-4 col-sm-4 marb20">
-            <div class="ftr-tle">
-              <h4 class="white no-padding">Follow us</h4>
-            </div>
-            <div class="info-sec">
-              <ul class="social-icon">
-                <li class="bglight-blue"><i class="fa fa-facebook"></i></li>
-                <li class="bgred"><i class="fa fa-google-plus"></i></li>
-                <li class="bgdark-blue"><i class="fa fa-linkedin"></i></li>
-                <li class="bglight-blue"><i class="fa fa-twitter"></i></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="footer-line">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-12 text-center">
-            © Copyright Medilab Theme. All Rights Reserved
-            <div class="credits">
-
-              Designed by <a href="https://bootstrapmade.com/">BootstrapMade.com</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </footer>
-  <!--/ footer-->
+ 
 {% endblock content %}
