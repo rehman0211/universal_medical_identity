@@ -18,38 +18,38 @@ def load_user(user_id):
 
 #Report
 # #appointment
-# User, Patient, Doctor, InsuranceCompany, GovernmentBody, Report, Appointment, Disease, Prescription
+# User, Patient, Doctor, InsuranceCompany, GovernmentBody, Report, appointment
 
 
 
-patient_doctor = db.table('patient_doctor',
-    db.Column('patient_id',db.Integer,db.ForeignKey('patient.id')),
-    db.Column('doctor_id',db.Integer,db.ForeignKey('doctor.id'))
-)
-patient_disease = db.table('patient_desiese',
-    db.Column('patient_id',db.Integer,db.ForeignKey('patient.id')),
-    db.Column('disease',db.Integer,db.ForeignKey('disease.id'))
-)
-patient_report = db.table('patient_report',
-    db.Column('patient_id',db.Integer,db.ForeignKey('patient.id')),
-    db.Column('report_id',db.Integer,db.ForeignKey('report.id'))
-)
-patient_appointment = db.table('patient_appointment',
-    db.Column('patient_id',db.Integer,db.ForeignKey('patient.id')),
-    db.Column('appointment_id',db.Integer,db.ForeignKey('appointment.id'))
-)
-doctor_report = db.table('doctor_report',
-    db.Column('doctor_id',db.Integer,db.ForeignKey('doctor.id')),
-    db.Column('report_id',db.Integer,db.ForeignKey('report.id'))
-)
-doctor_appointment = db.table('doctor_appointment',
-    db.Column('doctor_id',db.Integer,db.ForeignKey('doctor.id')),
-    db.Column('appointment_id',db.Integer,db.ForeignKey('appointment.id'))
-)
-disease_appointment = db.table('disease_appointment',
-    db.Column('disease_id',db.Integer,db.ForeignKey('disease.id')),
-    db.Column('appointment_id',db.Integer,db.ForeignKey('appointment.id'))
-)
+# patient_doctor = db.table('patient_doctor',
+#     db.Column('patient_id',db.Integer,db.ForeignKey('patient.id')),
+#     db.Column('doctor_id',db.Integer,db.ForeignKey('doctor.id'))
+# )
+# patient_disease = db.table('patient_desiese',
+#     db.Column('patient_id',db.Integer,db.ForeignKey('patient.id')),
+#     db.Column('disease',db.Integer,db.ForeignKey('disease.id'))
+# )
+# patient_report = db.table('patient_report',
+#     db.Column('patient_id',db.Integer,db.ForeignKey('patient.id')),
+#     db.Column('report_id',db.Integer,db.ForeignKey('report.id'))
+# )
+# patient_appointment = db.table('patient_appointment',
+#     db.Column('patient_id',db.Integer,db.ForeignKey('patient.id')),
+#     db.Column('appointment_id',db.Integer,db.ForeignKey('appointment.id'))
+# )
+# doctor_report = db.table('doctor_report',
+#     db.Column('doctor_id',db.Integer,db.ForeignKey('doctor.id')),
+#     db.Column('report_id',db.Integer,db.ForeignKey('report.id'))
+# )
+# doctor_appointment = db.table('doctor_appointment',
+#     db.Column('doctor_id',db.Integer,db.ForeignKey('doctor.id')),
+#     db.Column('appointment_id',db.Integer,db.ForeignKey('appointment.id'))
+# )
+# disease_appointment = db.table('disease_appointment',
+#     db.Column('disease_id',db.Integer,db.ForeignKey('disease.id')),
+#     db.Column('appointment_id',db.Integer,db.ForeignKey('appointment.id'))
+# )
 
 
 
@@ -62,7 +62,6 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(60), nullable=False)
     userType = db.Column(db.String(60), nullable=False)
     lastLogin = db.Column(db.DateTime, nullable = True, default=datetime.utcnow)
-
 
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(app.config['SECRET_KEY'], expires_sec)
@@ -93,12 +92,12 @@ class Patient(db.Model):
     image_file = db.Column(db.LargeBinary, nullable=False, default='default.jpg')
     city = db.Column(db.String(20), nullable=False)
     state = db.Column(db.String(20), nullable=False)
-    current_doctorId = db.Column(db.Integer, db.ForeignKey('doctor.id'), nullable=False)
-    insuranceCompany_id = db.Column(db.Integer ,db.ForeignKey('insuranceCompany.id'),nullable=True)
-    doctors = db.relationship('Doctor',secondary=patient_doctor, backref=db.backref('patient',lazy='dynamic'))#many to many
-    diseases = db.relationship('Disease',secondary=patient_disease, backref=db.backref('patient',lazy='dynamic'))#many to many
-    reports = db.relationship('Report', secondary=patient_report, backref=db.backref('patient',lazy='dynamic'))#many to many
-    appointments = db.relationship('Appointment', secondary=patient_appointment, backref=db.backref('patient',lazy='dynamic'))#many to many
+    current_doctorId = db.Column(db.Integer, db.ForeignKey('doctor.id'), nullable=True)
+    #insuranceCompany_id = db.Column(db.Integer ,db.ForeignKey('insuranceCompany.id'),nullable=True)
+    # doctors = db.relationship('Doctor',secondary=patient_doctor, backref=db.backref('patient',lazy='dynamic'))#many to many
+    # diseases = db.relationship('Disease',secondary=patient_disease, backref=db.backref('patient',lazy='dynamic'))#many to many
+    # reports = db.relationship('Report', secondary=patient_report, backref=db.backref('patient',lazy='dynamic'))#many to many
+    # appointments = db.relationship('Appointment', secondary=patient_appointment, backref=db.backref('patient',lazy='dynamic'))#many to many
 
     def __repr__(self):
         return f"User('{self.id}')"
@@ -116,8 +115,8 @@ class Doctor(db.Model):
     hospitalName = db.Column(db.String(40), nullable=False)
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
     current_patientId = db.Column(db.Integer, db.ForeignKey('patient.id'), nullable=False)
-    reports = db.relationship('Report', secondary=doctor_report, backref=db.backref('doctor',lazy='dynamic'))#many to many
-    appointments = db.relationship('Appointment', secondary=doctor_appointment, backref=db.backref('doctor',lazy='dynamic'))#many to many
+    # reports = db.relationship('Report', secondary=doctor_report, backref=db.backref('doctor',lazy='dynamic'))#many to many
+    # appointments = db.relationship('Appointment', secondary=doctor_appointment, backref=db.backref('doctor',lazy='dynamic'))#many to many
 
 
 
@@ -150,12 +149,13 @@ class GovernmentBody(db.Model):
 class Report(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     patient_id = db.Column(db.Integer, db.ForeignKey('patient.id'), nullable=False)
-    symptom()
+
+
     title = db.Column(db.String(100), nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    disease_symptoms = db.relationship('Symptoms', backref='report', lazy=True)
+
     def __repr__(self):
         return f"User('{self.id}')"
 
@@ -165,13 +165,11 @@ class Appointment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     patient_id = db.Column(db.Integer, db.ForeignKey('patient.id'), nullable=False)
     doctor_id = db.Column(db.Integer, db.ForeignKey('doctor.id'), nullable=False)#many to many
-    report_id = db.Column(db.Integer, db.ForeignKey('report.id'), nullable=False)#one to one
-    disease_symptom = db.relationship()
-    disease = db.relationship('Disease', secondary=disease_appointment, backref=db.backref('appointment',lazy='dynamic'))#many to many
-    date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    #content = db.Column(db.Text, nullable=False)
-    #user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    prescription_id = db.Column(db.Integer, db.ForeignKey('prescription.id'), nullable=True)
+    report = db.Column(db.Integer, db.ForeignKey('report.id'), nullable=False)#one to one
+    #disease = db.relationship('Disease', secondary=disease_appointment, backref=db.backref('appointment',lazy='dynamic'))#many to many
+    date = db.Column(db.DateTime, nullable=True, default=datetime.utcnow)
+    content = db.Column(db.Text, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):
         return f"User('{self.id}')"
@@ -186,18 +184,4 @@ class Disease(db.Model):
     def __repr__(self):
         return f"User('{self.id}')"
 
-class Prescription(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    medicineName = db.Column(db.String(30),nullable=False)
-    dose = db.Column(db.String(20),nullable=False)
-    duration = db.Column(db.Integer,nullable=False)
-    advice = db.Column(db.String(20),nullable=True)
 
-    def __repr__(self):
-        return f"Prescription('{self.medicineName}','{self.dose}','{self.duration}')"
-
-
-class Symptom(db.Model):
-    id = db.Column(db.Integer,primary_key=True)
-    report_id = db.Column(db.Integer, db.ForeignKey('report.id'), nullable=False)
-    disease_symptom = db.Column(db.String(60),nullable=False) 
